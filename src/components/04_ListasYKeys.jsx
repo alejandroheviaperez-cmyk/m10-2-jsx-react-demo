@@ -1,0 +1,152 @@
+import { useState } from 'react';
+
+// ============================================================================
+// [CLAVE EXPOSICIÓN 4] RENDERIZADO DE LISTAS CON .map() Y LA PROP `key`
+// ----------------------------------------------------------------------------
+// 1. En JSX no se usan bucles `for`; se transforman arrays con `.map()`.
+// 2. Cada elemento raíz devuelto dentro de `.map()` DEBE llevar una prop `key`
+//    única y estable entre renderizados (normalmente un `id` de BD o UUID).
+// 3. ¿POR QUÉ NO USAR EL ÍNDICE DEL ARRAY (`index`) COMO `key`?
+//    Si reordenas, filtras o eliminas el primer elemento, todos los índices
+//    cambian y React confunde el estado interno de cada fila (por ejemplo,
+//    el texto escrito en un <input> o un checkbox marcado).
+// ============================================================================
+
+const MODULOS_INICIALES = [
+  { id: 'di-01', codigo: 'DI', nombre: 'Desarrollo de Interfaces', horas: 120 },
+  { id: 'psp-02', codigo: 'PSP', nombre: 'Programación de Servicios y Procesos', horas: 90 },
+  { id: 'ad-03', codigo: 'AD', nombre: 'Acceso a Datos', horas: 120 }
+];
+
+export default function ListasYKeys() {
+  const [modulos, setModulos] = useState(MODULOS_INICIALES);
+  const [nuevoNombre, setNuevoNombre] = useState('');
+  const [busqueda, setBusqueda] = useState('');
+  const [errorDuplicado, setErrorDuplicado] = useState('');
+
+  const agregarModulo = (e) => {
+    e.preventDefault();
+    const nombreLimpio = nuevoNombre.trim();
+    if (!nombreLimpio) return;
+
+    const existe = modulos.some(
+      (m) => m.nombre.trim().toLowerCase() === nombreLimpio.toLowerCase()
+    );
+
+    if (existe) {
+      setErrorDuplicado(`Error: El módulo "${nombreLimpio}" ya está registrado en el catálogo.`);
+      return;
+    }
+
+    const nuevo = {
+      id: `mod-${Date.now()}`, // ID único estable (mejor que usar el índice del array)
+      codigo: 'OPT',
+      nombre: nombreLimpio,
+      horas: 60
+    };
+    // Insertamos al principio para demostrar que React conserva la identidad de cada fila
+    setModulos([nuevo, ...modulos]);
+    setNuevoNombre('');
+    setErrorDuplicado('');
+  };
+
+  const eliminarModulo = (idAEliminar) => {
+    setModulos(modulos.filter((m) => m.id !== idAEliminar));
+  };
+
+  const invertirOrden = () => {
+    setModulos([...modulos].reverse());
+  };
+
+  const modulosFiltrados = modulos.filter((m) => {
+    const termino = busqueda.trim().toLowerCase();
+    return (
+      m.nombre.toLowerCase().includes(termino) ||
+      m.codigo.toLowerCase().includes(termino)
+    );
+  });
+
+  return (
+    <section className="card">
+      <h2>4. Listas Dinámicas con .map() y la prop key</h2>
+      <p className="subtitle">
+        Cada elemento de la lista utiliza <code className="code-inline">key=&#123;modulo.id&#125;</code> para
+        que el algoritmo de reconciliación (Virtual DOM) identifique cambios con precisión.
+      </p>
+
+      <form onSubmit={agregarModulo} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <input
+          type="text"
+          className="input"
+          style={{ flex: '1 1 260px', marginTop: 0 }}
+          placeholder="Añadir nuevo módulo al principio de la lista..."
+          value={nuevoNombre}
+          onChange={(e) => {
+            setNuevoNombre(e.target.value);
+            if (errorDuplicado) setErrorDuplicado('');
+          }}
+        />
+        <button type="submit" className="btn">Añadir módulo</button>
+        <button type="button" className="btn btn-secondary" onClick={invertirOrden}>
+          Invertir orden
+        </button>
+      </form>
+
+      {errorDuplicado && (
+        <p
+          role="alert"
+          style={{ color: 'var(--red)', fontWeight: 600, fontSize: '0.88rem', marginTop: '0.5rem' }}
+        >
+          {errorDuplicado}
+        </p>
+      )}
+
+      <div style={{ marginTop: '0.85rem' }}>
+        <input
+          type="search"
+          className="input"
+          style={{ marginTop: 0 }}
+          placeholder="Buscar módulo por nombre o código..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
+
+      <p style={{ marginTop: '0.85rem', fontSize: '0.9rem', fontWeight: 600, color: 'var(--primary)' }}>
+        Mostrando {modulosFiltrados.length} de {modulos.length} módulos
+      </p>
+
+      <ul className="list">
+        {modulosFiltrados.map((modulo) => (
+          // [CLAVE EXPOSICIÓN] La `key` va siempre en el elemento raíz del `.map()`
+          <li key={modulo.id} className="list-item">
+            <div>
+              <span className="pill" style={{ marginRight: '0.6rem' }}>{modulo.codigo}</span>
+              <strong>{modulo.nombre}</strong>
+              <span style={{ color: 'var(--muted)', marginLeft: '0.5rem', fontSize: '0.85rem' }}>
+                ({modulo.horas} h · key: <code className="code-inline">{modulo.id}</code>)
+              </span>
+            </div>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => eliminarModulo(modulo.id)}
+            >
+              Eliminar
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {modulosFiltrados.length === 0 && (
+        <p className="subtitle" style={{ marginTop: '0.75rem' }}>
+          No hay módulos que coincidan con la búsqueda o la lista está vacía.
+        </p>
+      )}
+
+      <p className="file-hint">
+        Archivo para mostrar en VS Code: <code className="code-inline">src/components/04_ListasYKeys.jsx</code>
+      </p>
+    </section>
+  );
+}
