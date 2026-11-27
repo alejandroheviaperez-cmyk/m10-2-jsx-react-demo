@@ -1,27 +1,16 @@
-# M10.2. JSX con React — Proyecto de Demostración para el Aula
+# M10.2. JSX (JavaScript XML) con React
 
-Proyecto educativo en **React 18 + Vite** diseñado para explicar paso a paso todas las características de **JSX (JavaScript XML)** directamente desde Visual Studio Code.
+- **Autor:** Alejandro Hevia Pérez
+- **Despliegue en producción (Vercel):** *https://m10-2-jsx-react-demo-khaki.vercel.app/*
 
-## Puesta en marcha rápida (3 pasos)
-
-1. Abre esta carpeta en **Visual Studio Code**.
-2. Abre una terminal integrada (`Ctrl + ñ` o `Ctrl + \``) y ejecuta:
-   ```bash
-   npm install
-   ```
-3. Inicia el servidor de desarrollo:
-   ```bash
-   npm run dev
-   ```
-   Se abrirá automáticamente en `http://localhost:5173`.
-
-## Guion sugerido para la exposición en clase
-
-Cada pestaña de la aplicación corresponde a un archivo numerado dentro de `src/components/`, con comentarios guiados (`[CLAVE EXPOSICIÓN]`):
-
-1. `01_SintaxisYFragmentos.jsx` — Nodo raíz único, Fragmentos (`<>...</>`), cierre obligatorio, `className`, `htmlFor` y componentes en Mayúscula.
-2. `02_ExpresionesYEstilos.jsx` — Llaves `{ }` (expresiones vs. sentencias), estilos en línea `style={{ }}` en `camelCase` y valores ignorados por React.
-3. `03_RenderizadoCondicional.jsx` — *Early return*, operador ternario (`? :`), operador `&&` y demostración en vivo de la **trampa del `0`**.
-4. `04_ListasYKeys.jsx` — Transformación de arrays con `.map()` y la importancia real de la prop `key` en el algoritmo de reconciliación.
-5. `05_EventosYSeguridadXSS.jsx` — Eventos `onClick={fn}` vs. `onClick={() => fn(arg)}` y demostración práctica de protección automática contra **XSS**.
-6. `06_DemoIntegradora.jsx` — Ejemplo completo integrando todas las reglas de JSX en un mini-panel de módulos.
+## Mejoras implementadas (Tickets 01 - 10)
+1. **Ticket 01:** Selector de tema Claro/Oscuro en la cabecera y pie de página corporativo dinámico.
+2. **Ticket 02:** Validación reactiva de formulario de alumno con alertas accesibles y saludo en tiempo real.
+3. **Ticket 03:** Calculadora fiscal con selección de IVA (21%, 10%, 4%), descuento (0-50%) y desglose completo.
+4. **Ticket 04:** Corrección de "La Trampa del 0" mediante evaluación booleana explícita y estado vacío en notificaciones.
+5. **Ticket 05:** Buscador en tiempo real, contador dinámico y control de duplicados en el catálogo de módulos.
+6. **Ticket 06:** Historial de auditoría de los últimos 5 eventos, limpieza de historial y banco de pruebas XSS.
+7. **Ticket 07:** Buscador por nombre, filtro de aprobados y ordenación dinámica en el panel de expedientes.
+8. **Ticket 08:** Formulario controlado para el alta dinámica de nuevos expedientes.
+9. **Ticket 09:** Componente reutilizable `<ResumenKPIs />` con métricas calculadas en tiempo real.
+10. **Ticket 10:** Persistencia automática en `localStorage`, botón de restablecimiento y build de producción limpio.
